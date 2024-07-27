@@ -28,9 +28,8 @@
 
 .display{
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
     padding: 25px;
-    align-items: center ;
     height: 80px;
     width: 100%;
     background-color: #000000;
@@ -41,10 +40,38 @@
     box-sizing: border-box;
 }
 
-.display-text{
+
+
+.currentDisplay{
+    display: flex;
+    align-items: end;
+    flex-direction: column;
+    height: 50px;
+    width: 100%;
+    background-color: #000000;
+    border: 1px solid black;
+    border-radius: 30px;
+    color: white;
+    box-sizing: border-box;
     font-family: 'Times New Roman', Times, serif;
-    font-size: 2.5rem;
+    font-size: 2.7rem;
     font-weight: 800;
+}
+
+
+
+
+.previousDisplay{
+
+    display: flex;
+    position: absolute;
+    justify-content: flex-start;
+    width: 20%;
+    height: 30px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1rem;
+    font-weight: 800;
+    color: gray;
 }
 .buttons {
     display: flex;
