@@ -1,98 +1,134 @@
+
 let currentNum = "";
 let previousNum = "";
 let operator = "";
 
-
+// Select DOM elements
 const operatorButton = document.querySelectorAll(".operators");
 const numberButton = document.querySelectorAll(".num");
 const displayScreen = document.querySelector(".display");
 const delButton = document.querySelector("#del");
 const clearButton = document.querySelector("#clear");
 const equalButton = document.querySelector("#equal");
-const decimleButton = document.querySelector(".decimle");
+const decimalButton = document.querySelector(".decimle");
 const currentDisplay = document.querySelector(".currentDisplay");
 const previousDisplay = document.querySelector(".previousDisplay");
 
-// Sum Function
+// Sum Function (Fixed to perform addition)
 function getSum(num1, num2) {
-    return num1 - num2
-};
-// Subtract Function
-function getSubtract(num1, num2) {
-    return num1 - num2
-};
-// Multiply Function
-function getMultiply(num1, num2) {
-    return num1 * num2
-};
-// Divide Function
-function getDivide(num1, num2) {
-    return num1 / num2
-};
-
-
-// For each function for buttons to get the value input
-numberButton.forEach((btn) => {
-    btn.addEventListener("click", (number) => {
-        handleNumber(number.target.textContent);
-    });
-});
-
-// Displaying the number that is clicked
-function handleNumber(number) {
-    currentNum += number;
-    currentDisplay.textContent = currentNum;
+    return num1 + num2;
 }
 
+// Subtract Function
+function getSubtract(num1, num2) {
+    return num1 - num2;
+}
 
+// Multiply Function
+function getMultiply(num1, num2) {
+    return num1 * num2;
+}
+
+// Divide Function
+function getDivide(num1, num2) {
+    if (num2 === 0) {
+        alert("Cannot divide by zero");
+        return num1;
+    }
+    return num1 / num2;
+}
+
+// Event Listener for Number Buttons
+numberButton.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+        handleNumber(e.target.textContent);
+    });
+});
 
 // Clear Button Function
 clearButton.addEventListener("click", function() {
     previousNum = "";
     currentNum = "";
     operator = "";
-    previousDisplay.textContent = currentNum;
-    currentDisplay.textContent = currentNum;
+    updateDisplay();
 });
-// Clear Button Function
 
+// Equal Button Function
+equalButton.addEventListener("click", function() {
+    calculate();
+    updateDisplay();
+});
 
-
-// Previous display and current display function
+// Event Listener for Operator Buttons
 operatorButton.forEach((btn) => {
     btn.addEventListener("click", (e) => {
         handleOperator(e.target.textContent);
-        previousDisplay.textContent = previousNum + operator;
-        currentDisplay.textContent = currentNum;
+        updateDisplay();
     });
 });
 
 function handleOperator(op) {
-operator = op;
-previousNum = currentNum;
-currentNum = "";
+    if (currentNum === "") return;
+    if (previousNum !== "") {
+        calculate();
+    }
+    operator = op;
+    previousNum = currentNum;
+    currentNum = "";
 }
-// Previous display and current display function
 
-// Calculate Function on click
-function calculate(btn) {
-    previousNum = Number(previousNum);
-    currentNum = Number(currentNum);
+// Calculate Function
+function calculate() {
+    if (operator === "" || currentNum === "" || previousNum === "") return;
 
-    if (operator === "+") {
-        return previousNum += currentNum;
-    }else if (operator === "-") {
-         previousNum -= currentNum;
-    }else if (operator === "/") {
-        return previousNum /= currentNum;
-    }else {
-        return previousNum *= currentNum;
-    };
+    previousNum = parseFloat(previousNum);
+    currentNum = parseFloat(currentNum);
+
+    switch (operator) {
+        case "+":
+            previousNum = getSum(previousNum, currentNum);
+            break;
+        case "-":
+            previousNum = getSubtract(previousNum, currentNum);
+            break;
+        case "*":
+            previousNum = getMultiply(previousNum, currentNum);
+            break;
+        case "/":
+            previousNum = getDivide(previousNum, currentNum);
+            break;
+        default:
+            return;
+    }
     previousNum = round(previousNum);
-    console.log(previousNum);
-    
+    currentNum = "";  // 
+    operator = "";    // 
 }
 
+// Round Function
 function round(num) {
     return Math.round(num * 1000) / 1000;
 }
+
+// Display the current number and operator
+function updateDisplay() {
+    // Display the current number or result
+    currentDisplay.textContent = currentNum || previousNum; 
+
+    // Display the previous number and operator
+    previousDisplay.textContent = (operator ? previousNum + ' ' + operator : previousNum);
+}
+
+// Handle Number Button Clicks
+function handleNumber(number) {
+    currentNum += number;
+    updateDisplay();
+}
+
+// Handle Decimal Button Click (if needed)
+decimalButton.addEventListener("click", () => {
+    if (!currentNum.includes(".")) {
+        currentNum += ".";
+        updateDisplay();
+    }
+});
